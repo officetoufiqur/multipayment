@@ -11,6 +11,7 @@ class PaymentFactory
         return match ($gateway) {
             'sslcommerz' => new SslCommerzPaymentService,
             'bkash' => new BkashPaymentService,
+            'stripe' => new StripePaymentService,
             default => throw new \Exception("Unsupported payment gateway: {$gateway}"),
         };
     }

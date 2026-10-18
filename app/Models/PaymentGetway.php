@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
     'password',
     'app_key',
     'app_secret',
+    'webhook',
     'store_id',
     'is_active',
     'is_testmode',
@@ -28,6 +29,7 @@ class PaymentGetway extends Model
         'app_key' => 'encrypted',
         'app_secret' => 'encrypted',
         'store_id' => 'encrypted',
+        'webhook' => 'encrypted',
 
         'is_active' => 'boolean',
         'is_testmode' => 'boolean',

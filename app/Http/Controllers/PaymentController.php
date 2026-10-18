@@ -19,7 +19,7 @@ class PaymentController extends Controller
     public function pay(Request $request, $id)
     {
         $request->validate([
-            'gateway' => ['required', 'string', 'in:sslcommerz,bkash'],
+            'gateway' => ['required', 'string'],
         ]);
 
         $gatewayName = $request->input('gateway');

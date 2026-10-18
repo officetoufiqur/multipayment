@@ -20,4 +20,17 @@ class PaymentConfig
             'password' => $gateway->password,
         ];
     }
+
+    public static function stripe(): array
+    {
+        $gateway = PaymentGetway::where('slug', 'stripe')
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        return [
+            'publishable_key' => $gateway->app_key,
+            'secret_key' => $gateway->app_secret,
+            'webhook' => $gateway->webhook,
+        ];
+    }
 }
