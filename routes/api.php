@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticationController;
+use App\Http\Controllers\MpesaController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentGatewayController;
 use App\Http\Controllers\StripeWebhookController;
@@ -28,3 +29,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
+Route::post('/mpesa/callback', [MpesaController::class, 'callback'])
+    ->name('payments.mpesa.callback');

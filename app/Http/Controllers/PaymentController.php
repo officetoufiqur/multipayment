@@ -11,6 +11,7 @@ use App\Trait\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class PaymentController extends Controller
 {
@@ -18,16 +19,25 @@ class PaymentController extends Controller
 
     public function pay(Request $request, $id)
     {
+        $gatewayName = $request->input('gateway');
+
         $request->validate([
             'gateway' => ['required', 'string'],
+            'phone' => [
+                Rule::requiredIf($gatewayName === 'mpesa'),
+                'nullable',
+                'string',
+                'max:20',
+            ],
         ]);
 
-        $gatewayName = $request->input('gateway');
         $user = Auth::user();
         $product = Product::findOrFail($id);
 
-        // Calculate Price
-        $amount = $product->price;
+        // M-Pesa accepts whole KES amounts; other gateways retain BDT pricing.
+        $amount = $gatewayName === 'mpesa'
+            ? round((float) $product->price)
+            : $product->price;
 
         if ($amount <= 0) {
             return $this->errorResponse('Product price must be greater than 0', 400);
@@ -56,7 +66,7 @@ class PaymentController extends Controller
                     'transaction_id' => $transactionId,
                     'gateway_name' => $gatewayName,
                     'amount' => $amount,
-                    'currency' => 'BDT',
+                    'currency' => $gatewayName === 'mpesa' ? 'KES' : 'BDT',
                     'status' => 'pending',
                 ]);
 
@@ -79,6 +89,7 @@ class PaymentController extends Controller
             'invoice' => $data['invoice'],
             'payment' => $data['payment'],
             'user' => $user,
+            'phone' => $request->input('phone'),
         ]);
 
         if (! $result['status']) {
@@ -86,8 +97,11 @@ class PaymentController extends Controller
         }
 
         return $this->successResponse(
-            ['redirect_url' => $result['redirect_url']],
-            'Payment initiated successfully.'
+            array_filter([
+                'redirect_url' => $result['redirect_url'] ?? null,
+                'checkout_request_id' => $result['checkout_request_id'] ?? null,
+            ], fn ($value) => $value !== null),
+            $result['message'] ?? 'Payment initiated successfully.'
         );
     }
 }

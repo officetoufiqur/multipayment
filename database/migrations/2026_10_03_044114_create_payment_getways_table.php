@@ -17,11 +17,13 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('logo')->nullable();
             $table->string('base_url')->nullable();
+            $table->string('callback_url')->nullable();
             $table->string('username')->nullable();
-            $table->string('password')->nullable();
+            $table->text('password')->nullable();
             $table->text('app_key')->nullable();
             $table->text('app_secret')->nullable();
             $table->text('webhook')->nullable();
+            $table->string('shortcode')->nullable();
             $table->string('store_id')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_testmode')->default(false);

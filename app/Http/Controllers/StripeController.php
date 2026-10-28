@@ -23,7 +23,7 @@ class StripeController extends Controller
         if ($transactionId) {
             $payment = Payment::with('invoice.user')->where('transaction_id', $transactionId)->first();
 
-            if (!Auth::check() && $payment && $payment->invoice && $payment->invoice->user) {
+            if (! Auth::check() && $payment && $payment->invoice && $payment->invoice->user) {
                 Auth::login($payment->invoice->user);
                 $request->session()->regenerate();
             }
@@ -31,14 +31,14 @@ class StripeController extends Controller
 
         // Stripe Payment Verification Process
         $service = PaymentFactory::make('stripe');
-        $result  = $service->verify($request);
+        $result = $service->verify($request);
 
         $isSuccess = is_array($result) ? ($result['status'] ?? false) : (bool) $result;
 
         if ($isSuccess) {
             return $this->successResponse(
+                $payment,
                 'Stripe payment successfully verified and enrollment activated!',
-                $payment
             );
         }
 

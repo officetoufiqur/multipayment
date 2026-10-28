@@ -34,6 +34,8 @@ class PaymentGatewayController extends Controller
             'app_secret' => ['nullable', 'string'],
             'webhook' => ['nullable', 'string'],
             'store_id' => ['nullable', 'string'],
+            'callback_url' => ['nullable', 'url'],
+            'shortcode' => ['nullable', 'string'],
             'is_active' => ['boolean'],
             'is_testmode' => ['boolean'],
             'is_localhost' => ['boolean'],
@@ -49,6 +51,8 @@ class PaymentGatewayController extends Controller
             'name' => $validated['name'],
             'slug' => Str::slug($validated['name']),
             'base_url' => $validated['base_url'] ?? null,
+            'callback_url' => $validated['callback_url'] ?? null,
+            'shortcode' => $validated['shortcode'] ?? null,
             'username' => $validated['username'] ?? null,
             'password' => $validated['password'] ?? null,
             'app_key' => $validated['app_key'] ?? null,
@@ -79,6 +83,8 @@ class PaymentGatewayController extends Controller
             'app_secret' => ['nullable', 'string'],
             'webhook' => ['nullable', 'string'],
             'store_id' => ['nullable', 'string'],
+            'callback_url' => ['nullable', 'url'],
+            'shortcode' => ['nullable', 'string'],
             'is_active' => ['boolean'],
             'is_testmode' => ['boolean'],
             'is_localhost' => ['boolean'],
@@ -101,6 +107,8 @@ class PaymentGatewayController extends Controller
             'name' => $validated['name'],
             'slug' => $slug,
             'base_url' => $validated['base_url'] ?? null,
+            'callback_url' => $validated['callback_url'] ?? null,
+            'shortcode' => $validated['shortcode'] ?? null,
             'username' => $validated['username'] ?? null,
             'password' => $validated['password'] ?? null,
             'app_key' => $validated['app_key'] ?? null,
@@ -124,7 +132,7 @@ class PaymentGatewayController extends Controller
         $getway = PaymentGetway::findOrFail($id);
 
         $getway->update([
-            'is_active' => !$getway->is_active,
+            'is_active' => ! $getway->is_active,
         ]);
 
         return $this->successResponse(

@@ -12,6 +12,7 @@ class PaymentFactory
             'sslcommerz' => new SslCommerzPaymentService,
             'bkash' => new BkashPaymentService,
             'stripe' => new StripePaymentService,
+            'mpesa' => new MpesaPaymentService,
             default => throw new \Exception("Unsupported payment gateway: {$gateway}"),
         };
     }

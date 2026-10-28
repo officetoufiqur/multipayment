@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use App\Services\Payment\PaymentFactory;
-use App\Traits\ApiResponse;
+use App\Trait\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
